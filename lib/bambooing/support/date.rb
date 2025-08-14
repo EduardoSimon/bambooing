@@ -8,7 +8,6 @@ module Bambooing
       WEEKDAYS = (1..5).freeze
       class << self
         def cweekdays
-          today = ::Date.today
           current_day = today
           days = []
           direction = :next_day
@@ -28,8 +27,8 @@ module Bambooing
         end
 
         def cmonth_weekdays
-          day = ::Date.today - ::Date.today.mday + 1
-          end_of_month = ::Date.today.next_month - ::Date.today.next_month.mday
+          day = today - today.mday + 1
+          end_of_month = today.next_month - today.next_month.mday
           days = []
 
           while day <= end_of_month
@@ -40,8 +39,27 @@ module Bambooing
           days
         end
 
+        def weekdays_between(start_date:, end_date:)
+          start_date = ::Date.parse(start_date) if start_date.is_a?(String)
+          end_date = ::Date.parse(end_date) if end_date.is_a?(String)
+          days = []
+          current_day = start_date
+          while current_day <= end_date
+            days << current_day if WEEKDAYS.include?(current_day.wday)
+            current_day = current_day.next_day
+          end
+          days
+        end
+
         def cyear
-          ::Date.today.year
+          today.year
+        end
+
+        private
+
+        def today
+          #::Date.new(2021,12,31)
+          ::Date.today
         end
       end
     end
